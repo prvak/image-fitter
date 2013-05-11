@@ -59,7 +59,7 @@ def draw_description(target, gridSize, tileSize, borderWidth, fontSize, labels):
         return
     if not labels:
         # Generate default labels if they are not specified.
-        labels = ("%s)" % chr(x) for x in xrange(ord('A'), ord('Z')))
+        labels = ("%s)" % chr(x) for x in xrange(ord('a'), ord('z')))
     draw = ImageDraw.Draw(target)
     scriptdir = os.path.dirname(os.path.realpath(__file__))
     font = ImageFont.truetype(scriptdir+"/DejaVuSans.ttf", fontSize)
