@@ -61,7 +61,8 @@ def draw_description(target, gridSize, tileSize, borderWidth, fontSize, labels):
         # Generate default labels if they are not specified.
         labels = ("%s)" % chr(x) for x in xrange(ord('A'), ord('Z')))
     draw = ImageDraw.Draw(target)
-    font = ImageFont.truetype("DejaVuSans.ttf", fontSize)
+    scriptdir = os.path.dirname(os.path.realpath(__file__))
+    font = ImageFont.truetype(scriptdir+"/DejaVuSans.ttf", fontSize)
     color = "#000000"
     tiles = gridSize[0]*gridSize[1]
     colIndex = [r%gridSize[0] for r in range(tiles)]
