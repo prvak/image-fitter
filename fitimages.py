@@ -79,9 +79,10 @@ def parse_commandline_arguments():
     parser.add_argument("-c", "--columns", type=int, required=True, help='height of the final image in pixels')
     parser.add_argument("-b", "--border", type=int, default=2, help='width of the border in pixels')
     parser.add_argument("-f", "--font", type=int, default=20, help='size of the font in pixels')
-    parser.add_argument("-l", "--label", type=str, action='append', help='size of the font in pixels')
+    parser.add_argument("-l", "--label", type=str, action='append', help='labels used for images, this option may be specified more than once')
     parser.add_argument("--help", action='help', help='print this help message')
     parser.add_argument("files", type=str, nargs='+', help="images to be fitted on the page")
+    parser.add_argument("-o", "--output", type=str, required=True, help="target file where the final image will be written")
     return parser.parse_args()
 
 if __name__=="__main__":
@@ -98,6 +99,6 @@ if __name__=="__main__":
     draw_images(target, images, gridSize, tileSize, borderWidth)
     draw_grid(target, gridSize, tileSize, borderWidth)
     draw_description(target, gridSize, tileSize, borderWidth, args.font, args.label)
-    target.save("target.png")
+    target.save(args.output)
 
 
