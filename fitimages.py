@@ -72,6 +72,25 @@ def draw_description(target, gridSize, tileSize, borderWidth, fontSize, labels):
         yOffset = int(row*(tileSize[1]+borderWidth) + borderWidth + 20)
         draw.text((xOffset, yOffset), label, font=font, fill=color)
 
+def draw_scale(target, gridSize, tileSize, borderWidth, fontSize, scale, dpi, scaleLabel):
+    if not fontSize or not dpi:
+        return
+    if not scaleLabel:
+        scaleLabel = "1 cm"
+    draw = ImageDraw.Draw(target)
+    scriptdir = os.path.dirname(os.path.realpath(__file__))
+    font = ImageFont.truetype(scriptdir+"/DejaVuSans-Bold.ttf", fontSize)
+    color = "#000000"
+    xOffset = int(borderWidth + 20)
+    yOffset = int(borderWidth + 20 + 2*fontSize)
+    scaleLength = int(scale*dpi/2.71) # convert inches to centimeters
+    scaleWidth = fontSize/10
+    draw.line([xOffset, yOffset, xOffset + scaleLength, yOffset], width=scaleWidth, fill=color)
+    draw.line([xOffset, yOffset - fontSize/3, xOffset, yOffset + fontSize/3], width=scaleWidth, fill=color)
+    draw.line([xOffset + scaleLength, yOffset - fontSize/3, xOffset + scaleLength, yOffset + fontSize/3], width=scaleWidth, fill=color)
+    labelSize = font.getsize(scaleLabel)
+    draw.text((xOffset + (scaleLength - labelSize[0])/2, yOffset + fontSize/2), scaleLabel, font=font, fill=color)
+
 def parse_commandline_arguments():
     parser = argparse.ArgumentParser(description="Place multiple images into one image.", add_help=False)
     parser.add_argument("-w", "--width", type=int, default=600, help='width of the final image in pixels')
@@ -81,13 +100,14 @@ def parse_commandline_arguments():
     parser.add_argument("-b", "--border", type=int, default=2, help='width of the border in pixels')
     parser.add_argument("-f", "--font", type=int, default=20, help='size of the font in pixels')
     parser.add_argument("-l", "--label", type=str, action='append', help='labels used for images, this option may be specified more than once')
+    parser.add_argument("-d", "--dpi", type=int, help='DPI of images, it is used to display correct scale, no scale is displayed if this value is missing')
+    parser.add_argument("--scale-label", type=str, help='label displayed next to the scale')
     parser.add_argument("--help", action='help', help='print this help message')
     parser.add_argument("files", type=str, nargs='+', help="images to be fitted on the page")
     parser.add_argument("-o", "--output", type=str, required=True, help="target file where the final image will be written")
     return parser.parse_args()
 
 if __name__=="__main__":
-    # parse commandline arguments
     args = parse_commandline_arguments()
     images = load_images(args.files)
     borderWidth = args.border
@@ -100,6 +120,7 @@ if __name__=="__main__":
     draw_images(target, images, gridSize, tileSize, borderWidth)
     draw_grid(target, gridSize, tileSize, borderWidth)
     draw_description(target, gridSize, tileSize, borderWidth, args.font, args.label)
+    draw_scale(target, gridSize, tileSize, borderWidth, args.font, scale, args.dpi, args.scale_label)
     target.save(args.output)
 
 
