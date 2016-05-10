@@ -9,5 +9,5 @@ Usage
 
 `python image-fitter.py -r 2 -c 2 -o out.png A.png B.png C.png D.png`
 
-Call `python split.py --help` to display help. 
+Call `python image-fitter.py --help` to display help. 
 
